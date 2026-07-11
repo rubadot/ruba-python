@@ -1,0 +1,37 @@
+[project]
+name = "ruba-sdk"
+authors = [{ name = "Ruba", email = "support@getruba.com" }]
+description = "Ruba SDK for Python"
+readme = "README.md"
+dynamic = ["version"]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.11",
+]
+requires-python = ">=3.11"
+dependencies = ["httpx>=0.28.1", "adaptix==3.0.0b12"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "ruba/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ruba"]
+
+[dependency-groups]
+dev = ["ty", "ruff", "pytest"]
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+extend-select = ["I", "UP"]
+
+[tool.uv]
+default-groups = ["dev"]

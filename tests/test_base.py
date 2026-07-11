@@ -1,0 +1,69 @@
+import typing
+
+import pytest
+
+from ruba import Ruba, RubaAsync
+from ruba.base import AsyncClientBase, SyncClientBase
+
+
+def test_default_clients_use_ruba_api() -> None:
+    sync_client = Ruba(access_token="ruba_at_u_xxx")
+    async_client = RubaAsync(access_token="ruba_at_u_xxx")
+
+    assert str(sync_client._client._client.base_url) == "https://api.getruba.com"
+    assert str(async_client._client._client.base_url) == "https://api.getruba.com"
+
+
+@pytest.fixture(params=[SyncClientBase, AsyncClientBase])
+def client(request) -> SyncClientBase | AsyncClientBase:
+    cls = request.param
+    return cls(
+        base_url="https://api.getruba.com",
+        version="2026-04",
+        access_token="ruba_at_u_xxx",
+    )
+
+
+class TestBuildRequest:
+    @pytest.mark.parametrize(
+        ("value", "expected"),
+        [
+            ({"id": "value"}, "https://api.getruba.com/v1/items/value"),
+            ({"id": 123}, "https://api.getruba.com/v1/items/123"),
+            (
+                {"id": "value with spaces"},
+                "https://api.getruba.com/v1/items/value%20with%20spaces",
+            ),
+        ],
+    )
+    def test_path_params(
+        self,
+        value: dict[str, typing.Any],
+        expected: str,
+        client: SyncClientBase | AsyncClientBase,
+    ) -> None:
+        request = client.build_request(
+            method="GET",
+            url="/v1/items/{id}",
+            path_params=value,
+        )
+        assert request.method == "GET"
+        assert str(request.url) == expected
+
+    def test_query_params(self, client: SyncClientBase | AsyncClientBase) -> None:
+        request = client.build_request(
+            method="GET",
+            url="/v1/items/",
+            query_params={
+                "string_param": "value",
+                "bool_param": True,
+                "int_param": 42,
+                "list_param": ["a", "b", "c"],
+                "dict_param": {"key": "value"},
+            },
+        )
+        assert request.method == "GET"
+        assert (
+            str(request.url)
+            == "https://api.getruba.com/v1/items/?string_param=value&bool_param=true&int_param=42&list_param=a&list_param=b&list_param=c&dict_param%5Bkey%5D=value"
+        )
