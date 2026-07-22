@@ -1,6 +1,6 @@
 # Build with Ruba in Python
 
-This package provides synchronous and asynchronous Python clients for the Ruba API. It targets Python 3.11 and newer.
+Use typed synchronous and asynchronous clients to connect Python services to Ruba payments, billing, customers, and webhooks. The package supports Python 3.11 and newer.
 
 ## Installation
 

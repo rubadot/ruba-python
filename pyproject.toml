@@ -1,7 +1,7 @@
 [project]
 name = "ruba-sdk"
 authors = [{ name = "Ruba", email = "support@getruba.com" }]
-description = "Ruba SDK for Python"
+description = "Typed Python client for Ruba payments, billing, customers, and webhooks."
 readme = "README.md"
 dynamic = ["version"]
 classifiers = [
